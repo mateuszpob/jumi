@@ -1,0 +1,7 @@
+User-agent: *
+
+Disallow: /refresh-cart
+Disallow: /load-items-to-cart-list
+Disallow: /auth/login
+Disallow: /auth/logout
+Disallow: /auth/register

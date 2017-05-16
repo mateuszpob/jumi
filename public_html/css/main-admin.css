@@ -1,0 +1,85 @@
+/* ======================= START EXT DESC ========================== */
+.details-desc-panel img{
+    max-width: 100%;
+}
+.middle{
+    display: block;
+    margin: auto;
+}
+
+/* ======================= END ITEM DETAILS STYLES ========================== */
+
+img.upload-item{
+    max-width: 300px;
+    max-height: 220px;
+    float: right;
+}
+.showTable > tbody > tr > td:nth-child(2n-1) {
+    text-align: right;
+    border-right: 1px solid #f4f4f4;
+    width:50%;
+}
+.showTable > tbody > tr > td:nth-child(2n) {
+    text-align: left;
+}
+.variant-list-panel, .ext-desc-list{
+    background: rgba(0,0,0,0.4);
+    padding: 10px;
+    margin: 0 0 32px 0;
+    border-radius: 3px;
+}
+.variant-list-panel .btn, .ext-desc-list .btn{
+    float: left;
+}
+.variant-list-panel .btn{
+    display: none;
+}
+
+.variant-list-panel:last-child .btn.remove-variant-option,
+.variant-list-panel:last-child div:last-child .btn.add-variant-option{
+    display: block;
+}
+
+
+
+/* ======================== Start ExtDesc Editor ============================ */
+.ext-desc-value{
+    position: relative;
+}
+
+.ext-desc-list-panel:nth-child(n+2){
+    margin-top: 20px;
+}
+.ext-desc-panel{
+    background: #fff;
+    min-height: 200px;
+    
+}
+.ext-desc-panel img{
+    max-width: 100%;
+}
+.tex-or-display-btn{
+    position: absolute;
+        top: -34px;
+    right: 13px;
+}
+.ext-desc-list-panel:last-child .btn.remove-variant-option,
+.ext-desc-list-panel:last-child div:last-child .btn.add-variant-option{
+    display: block;
+}
+/*============= Start Dropzone ============ */
+.dropzone-ext-desc{
+    position: absolute;
+    bottom: -3px;
+    right: 30px;
+}
+#holder { border: 10px dashed #ccc; width: 100px; min-height: 100px; margin: 20px auto;}
+#holder.hover { border: 10px dashed #0c0; }
+#holder img { display: block; margin: 10px auto; }
+#holder p { margin: 10px; font-size: 14px; }
+progress { width: 100%; }
+progress:after { content: '%'; }
+.fail { background: #c00; padding: 2px; color: #fff; }
+.hidden { display: none !important;}
+/*============= End Dropzone ============ */
+/* ========================== END ExtDesc Editor ============================ */

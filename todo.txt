@@ -1,0 +1,218 @@
+// nowy ficzer
+na kafelkach wyswietlamy zawsze description, powinien to być text, nie html.
+na stronie produktu wyswietlamy ext_desc, jeśli nie ma ext_desc to wyświetlamy
+
+===========================
+
+1)  szukajka w admin/users
+2) jak dodajesz parrent cattegory to nie mozesz dac jakiejsc nizszej
+3) nie moze byc myslnikow w nazwach kategorii - trza to naprawic jakos
+4) jak dodajesz item nowy, to nie dodaje sie jego kategoria
+5) kolorki inputuw w czekałcie jak wpisuje cos a wczesniej byl blad to dalej jest czerwone
+6) rozkminic co zrobic z tym ze przy dodawaniu itemu do koszyka, nie sprawdzam czy ten koszyk nalezy do mnie
+    (hujnia sie robi jak niezalogowany mam koszyk, zaloguje sie i wraca mi do tego koszyka co mialem jako
+    (niezalogowany, dodalem wywalenie koszyka z sesji przed logowaniem)
+
+
+==== to wazne sa w kodzie komenty =========
+1) dorobic zeby nie mozna bylo za duzo na raz itemow i page dobre itp.
+2) w widoku item flow main trza przerobic linki do itemow bo ubogie
+3) paginacja sie jebie jak sa 4 str to 4 nie dziala i huj
+===============
+
+# ten mimity jest tu http://demo.18maret.com/demo/mimity/v1.2/catalogue.html
+
+
+
+baza: postgres, 123123
+
+
+
+
+
+
+
+
+
+// linijka z composer require
+"adamwathan/eloquent-oauth-l5": "dev-master"
+
+
+===== Adminowanie =======
+1)Startowanie:
+    php artisan reset (odpala migrate:reser, migrate, create:admin, db:seed)
+2)Dodanie schema categories
+    truncate schema_categories cascade;
+    insert into schema_categories (owner_id, name, created_at, updated_at) values (1, 'Łazienki', now(), now());
+    insert into schema_categories (owner_id, name, created_at, updated_at) values (1, 'Elektronika', now(), now());
+
+======== Adminowanie na serverze ====================
+composer:
+baza: qwer34_mojachata
+ip: 148.251.156.146
+haslo: to z 'a' na końcu
+psql: /usr/local/pgsql/bin/psql -U qwer34_test -W qwer34_test -h 127.0.0.1
+phpPgAdmin: http://s43.linuxpl.com/phppgadmin/
+
+// poczta na serwerze
+sklep@mojachata.eu / zamowienia13! / s43.linuxpl.com
+
+
+==================== SQLe ======================
+-- przeliczy wszystkie ceny zgodnie z marżą nadaną kategorii --
+update categories set margin_percentage = 35 where schema_id = 1;
+update items as i 
+set price = round((price_producer * c.margin_percentage * 0.01) + price_producer)
+from category_item as ci
+left join categories as c on c.id = ci.category_id
+where i.id = ci.item_id;
+
+update items set producer_id = 1;
+
+update items set active = false where image_path is null;
+
+-- poprawi pacze do obrazkow itemow na produkcji (tylko raz) -potem przerobic robota
+update items set image_path = concat('items/', image_path) where image_path IS not null
+-----------------
+-- pokaze ile jest itemow z price > 0
+select count(1) from items where price > 0 and image_path is not null;
+select i.id from items i left join product_variants pv on pv.item_id = i.id where pv.price > 0;
+
+-- to odpalilem dla kategorii:
+update category_item set category_id = 23 where category_id = 126;
+update category_item set category_id = 25 where category_id = 128;
+update category_item set category_id = 20 where category_id = 101
+
+-- poprawi ceny na dobry typ
+alter table payment_logs alter column total_amount type numeric (18,2);
+alter table "orders" alter column total_amount type numeric (18,2);
+alter table "orders" alter column shipment_amount type numeric (18,2);
+alter table "orders" alter column cart_amount type numeric (18,2);
+alter table "orders" alter column payment_received type numeric (18,2);
+alter table items alter column price type numeric (18,2);
+alter table items alter column price_producer type numeric (18,2);
+alter table items alter column price_discounted type numeric (18,2);
+alter table cart_items alter column price type numeric (18,2);
+alter table cart_items alter column price_discounted type numeric (18,2);
+alter table order_items alter column price type numeric (18,2);
+alter table order_items alter column price_discounted type numeric (18,2);
+
+.............................
+1) metody platnosci - karta paypal payu przelew(przedplata) dotpay
+2) lista koszyka w podgladzie
+3) 
+4) zeby po dodaniu do koszyka pierwszego prod lecial do koszyka
+3) kupuje na rachunek, fakture na firme, fakture na osobe fizyczna (tera jest bez faktur)
+4) mozliwosc zmiany danych usera ktory sie zarejestruje (jego profil czy huj wie co)
+5) zniżka (discount)
+
+6) na widoku kafelkowym endless scroll
+7) jak kategoria nie ma itemow to nei wyswietlac jej w menu
+8) paginacje poprawic, zeby byl powrot do pierwszej strony
+
+=============== BŁEDY ================
+1) http://mojachata.eu/item/73
+2) jestem zalogowany i kupuje to przy checkoucie mam "TWOJE DANE - zakupy bez logowania"
+3) dodawanie itemow - brak pol 
+schema_id, producer_id, ean, code, count, weight, price_discounted, categpry_name
+
+
+
+
+====================== START =======================
+
+
+
+
+
+
+
+
+
+
+===========================================================
+dubielvitrum - mozna brac zdjecia
+poprosic o zdjecia z novotermu
+========
+Artykuły uzupełniające: musi byc lista wszystkich produktow na popapie do edycji zeby mirek mogl wybrac co do tego spasuje
+>>> Klasy produktów: eco, standard, premium - usredniac jakos po cenach zeby dopasowac tanią baterie do taniej kabiny ...
+========
+Wysyłki:
+Nowoterm - cena 2% od wartosci towaru, wysyłka z novotermu, na wszystko co mają
+Dubiel - 49PLN na lustro standardowe (gotowce), jesli klient chce takie lustro w innym wymiarze, to sie da, ale wtedy cena transportu negocjowana
+DUSZI - [półki, kubeczki do mycia zebow, mydelniczki, DESKI, KABINY] - transport 18,50 wszystko poza kabinami, Kabiny prysznicowe czteroscienne - gratis. Ścianki i kabiny montowane do ściany - 125PLN Brutto
+ŻYWIEC [kotły] - dostawa gratis
+ASTOR [umywali, meble] - transport powyżej 1000 gratis - i tu trzeba wpisac ceny z palucha
+ORISTO [meble] - koszt wysylki palety 123PLN (ale u nich najtansza szafka 400)
+
+
+
+
+
+
+
+
+
+
+    // $cats = \App\Category::allWithActiveItems();
+    // foreach($cats['categories'] as $c){
+    //     $html = '<div class="col-md-3 col-sm-3 col-xs-3  ">
+            
+    //             <div class="category-tile shadow-box">
+    //                 <a href="{{$c->getUrl()}}"><h4>'.$c->name.'</h4></a>
+    //                 <div class="cat-picture">
+    //                     <a href="{{$c->getUrl()}}"><img class="shop-item-image" src="'.url('image/'.$c->getImageSrc()).'" alt="" ></a>
+    //                 </div>
+    //                 <div class="subcategories-menu">
+    //                     <ul>';
+    //                         foreach($c->getChildren() as $child){
+    //                             if($child->items()->active()->count() > 0)
+    //                             $html .= '<li><a href="'.$child->getUrl().'">'.$child->name.'</a></li>';
+                            
+    //                         }
+    //                 $html .= '</ul>   
+    //                 </div>
+    //             </div>
+            <div class="col-md-3 col-sm-3 col-xs-3  ">
+    //     </div>';
+    //     echo $html;
+    // }
+
+
+
+http://vshare.io/d/f13d6d1
+
+\Debugbar::info($last_cart[0]->getCartQuantityTotal());
+
+
+
+#4080ff To nie jest kraj dla starych ludzi
+
+
+
+
+
+
+======================================= PayU ========================================================
+Klucze konfiguracyjne znajdziesz także w szczegółach punktu płatności tego sklepu.
+
+Id punktu płatności (pos_id): 
+Protokół OAuth - client_id  300127
+Klucz (MD5): 
+Protokół OAuth - client_secret  df292495cfa141324ce3123865fe51f1
+Drugi klucz (MD5): 
+Symetryczny klucz do szyfrowania komunikacji    7e0f6a5b97dd11bee0bd799766db3fd9
+Klucz autoryzacji płatności (pos_auth_key): pJJtttC
+
+
+============== Dane ====================
+Przedpłata na konto Nr konta:
+ IDEA BANK 18 1950 0001 2006 0727 6705 0002
+
+nip 7161954139
+regon: 060329555
+
+adres: Antka rozpylacza 4/60 01-107 wawa
+adres koresp. Jana Olbrachta 23b/59 01-102 wawa
+pesel 76022304499
+

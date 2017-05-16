@@ -1,0 +1,10 @@
+/vendor
+/node_modules
+Homestead.yaml
+.env
+/public_html/.htaccess
+/nbproject/private/
+/hiveware.sublime-project
+/hiveware.sublime-workspace
+/storage/shop/
+/public_html/analytics.txt
